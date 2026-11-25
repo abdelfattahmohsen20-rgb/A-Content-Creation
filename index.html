@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A+ Content AI Studio — Table + Inline CSS Generator</title>
+  <style>
+    :root {
+      --bg: #eef3ff;
+      --card: #ffffff;
+      --primary: #1d4ed8;
+      --primary-dark: #1237a4;
+      --text: #111827;
+      --muted: #5f6b7a;
+      --border: #dfe7f3;
+      --success: #0f766e;
+      --danger: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 16px 60px;
+    }
+    header {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      color: var(--primary-dark);
+    }
+    header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .badge {
+      background: #dbeafe;
+      color: var(--primary-dark);
+      font-weight: 600;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 960px) {
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+    }
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 17px;
+      color: var(--primary-dark);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 13px;
+      margin: 12px 0 6px;
+      color: var(--text);
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="url"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #f9fbff;
+      color: var(--text);
+    }
+    textarea {
+      min-height: 95px;
+      resize: vertical;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #ffffff;
+    }
+    .row-inline {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:hover { background: var(--primary-dark); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-secondary {
+      background: #eff6ff;
+      color: var(--primary-dark);
+      border: 1px solid #bfdbfe;
+    }
+    .btn-secondary:hover { background: #dbeafe; }
+    .btn-success {
+      background: var(--success);
+    }
+    .btn-success:hover { background: #115e59; }
+    .status {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      display: none;
+    }
+    .status.info { display: block; background: #eff6ff; color: var(--primary-dark); border: 1px solid #bfdbfe; }
+    .status.error { display: block; background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+    .status.success { display: block; background: #f0fdfa; color: var(--success); border: 1px solid #99f6e4; }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    iframe.preview-frame {
+      width: 100%;
+      height: 680px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #eef3ff;
+    }
+    pre.code-box {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 14px;
+      border-radius: 12px;
+      max-height: 450px;
+      overflow: auto;
+      font-size: 12px;
+      direction: ltr;
+      text-align: left;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .img-preview {
+      max-height: 140px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-top: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>A+ Content AI Studio</h1>
+        <p>توليد محتوى A+ احترافي (EN + AR) بنظام Tables &amp; Inline CSS مع دعم التعديل بالـ Screenshot</p>
+      </div>
+      <span class="badge">GitHub Pages Ready • Client-Side AI</span>
+    </header>
+
+    <div class="grid">
+      <!-- API Config -->
+      <div class="card">
+        <h2>1. إعدادات الاتصال (Gemini API)</h2>
+        <div class="grid-2">
+          <div>
+            <label for="apiKey">مفتاح Gemini API Key</label>
+            <div class="row-inline">
+              <input type="password" id="apiKey" placeholder="AIzaSy..." style="flex:1" />
+              <button type="button" class="btn btn-secondary" onclick="saveKey()">حفظ المفتاح</button>
+            </div>
+            <div class="hint">يُحفظ محلياً في متصفحك فقط (localStorage) ولا يُرسل لأي سيرفر خارجي غير Google Gemini.</div>
+          </div>
+          <div>
+            <label for="modelSelect">نموذج الذكاء الاصطناعي</label>
+            <select id="modelSelect">
+              <option value="gemini-2.5-pro">gemini-2.5-pro (الأدق في الكود والتصميم)</option>
+              <option value="gemini-2.5-flash" selected>gemini-2.5-flash (سريع ويدعم الصور بكفاءة)</option>
+            </select>
+            <div class="hint">يدعم تحليل الصور والـ Screenshots وتوليد الأكواد الطويلة.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inputs -->
+      <div class="card">
+        <h2>2. بيانات المنتج والمرجع</h2>
+        <div class="grid-2">
+          <div>
+            <label for="productSlug">اسم المنتج للملفات (بالإنجليزية بدون مسافات)</label>
+            <input type="text" id="productSlug" placeholder="مثال: samsung-galaxy-a16" dir="ltr" />
+
+            <label for="productUrl">رابط صفحة المنتج الرسمية (Product Source URL)</label>
+            <div class="row-inline">
+              <input type="url" id="productUrl" placeholder="https://www.samsung.com/..." dir="ltr" style="flex:1" />
+              <button type="button" class="btn btn-secondary" onclick="fetchPageContent('productUrl', 'productRawData')">سحب البيانات تلقائياً</button>
+            </div>
+            <div class="hint">إذا كان الموقع يمنع السحب المباشر، انسخ مواصفات وروابط صور المنتج والصقها في الخانة بالأسفل.</div>
+
+            <label for="productRawData">بيانات ومواصفات وروابط صور المنتج (مستخرجة أو ملصوقة)</label>
+            <textarea id="productRawData" placeholder="الصق هنا مواصفات المنتج، المميزات، وروابط الصور المباشرة من الصفحة الرسمية..."></textarea>
+          </div>
+
+          <div>
+            <label for="refUrl">رابط صفحة المرجع البصري (Design Reference URL)</label>
+            <div class="row-inline">
+              <input type="url" id="refUrl" value="https://www.rayashop.com/en/samsung-galaxy-a07s-dual-sim-64gb-4gb-ram-4g-lte-light-violet-1" dir="ltr" style="flex:1" />
+              <button type="button" class="btn btn-secondary" onclick="fetchPageContent('refUrl', 'refRawData')">سحب المرجع</button>
+            </div>
+
+            <label for="refRawData">ملاحظات أو بنية المرجع (اختياري)</label>
+            <textarea id="refRawData" placeholder="يتم استخدام نظام ألوان وتصميم Raya Shop افتراضياً (#eef3ff, #ffffff, #1d4ed8). يمكنك إضافة تفاصيل إضافية هنا..."></textarea>
+
+            <label for="customPrompt">برومبت وتعليمات إضافية مخصصة (Optional Prompt)</label>
+            <textarea id="customPrompt" placeholder="مثال: ركز على البطارية والكاميرا، أو اجعل نبرة التسويق موجهة للألعاب..."></textarea>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px;" class="row-inline">
+          <button type="button" class="btn" id="generateBtn" onclick="generateAPlus()">🚀 توليد ملفات A+ (EN + AR)</button>
+        </div>
+        <div id="mainStatus" class="status"></div>
+      </div>
+
+      <!-- Summary & Notes -->
+      <div class="card" id="summaryCard" style="display:none;">
+        <h2>3. ملخص التحليل والملاحظات</h2>
+        <div id="aiSummary" style="white-space: pre-wrap; font-size: 14px;"></div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="card" id="outputCard" style="display:none;">
+        <h2>4. المخرجات والمعاينة الحية والتحميل</h2>
+        <div class="row-inline" style="margin-bottom: 14px;">
+          <button type="button" class="btn btn-success" onclick="downloadFile('en')">⬇️ تحميل ملف الإنجليزي (EN)</button>
+          <button type="button" class="btn btn-success" onclick="downloadFile('ar')">⬇️ تحميل ملف العربي (AR)</button>
+          <button type="button" class="btn btn-secondary" onclick="copyCode('en')">نسخ كود EN</button>
+          <button type="button" class="btn btn-secondary" onclick="copyCode('ar')">نسخ كود AR</button>
+        </div>
+
+        <div class="tabs">
+          <button type="button" class="tab-btn active" onclick="switchTab('previewEn', this)">معاينة الإنجليزي (EN)</button>
+          <button type="button" class="tab-btn" onclick="switchTab('previewAr', this)">معاينة العربي (AR)</button>
+          <button type="button" class="tab-btn" onclick="switchTab('codeEn', this)">كود HTML (EN)</button>
+          <button type="button" class="tab-btn" onclick="switchTab('codeAr', this)">كود HTML (AR)</button>
+        </div>
+
+        <div id="tab-previewEn" class="tab-panel">
+          <iframe id="frameEn" class="preview-frame"></iframe>
+        </div>
+        <div id="tab-previewAr" class="tab-panel" style="display:none;">
+          <iframe id="frameAr" class="preview-frame"></iframe>
+        </div>
+        <div id="tab-codeEn" class="tab-panel" style="display:none;">
+          <pre id="codeBoxEn" class="code-box"></pre>
+        </div>
+        <div id="tab-codeAr" class="tab-panel" style="display:none;">
+          <pre id="codeBoxAr" class="code-box"></pre>
+        </div>
+      </div>
+
+      <!-- Screenshot & Revision Loop -->
+      <div class="card" id="revisionCard" style="display:none;">
+        <h2>5. تعديل بالـ Screenshot أو الملاحظات (Iterative Revision)</h2>
+        <p class="hint">ارفع صورة لسكشن معين من المعاينة أو اكتب التعديل المطلوب، وسيتم تحديث النسختين (EN &amp; AR) بنفس قواعد التصميم.</p>
+        <div class="grid-2">
+          <div>
+            <label for="screenshotInput">رفع صورة السكشن (Screenshot - اختياري)</label>
+            <input type="file" id="screenshotInput" accept="image/*" onchange="previewScreenshot(event)" />
+            <img id="screenshotPreview" class="img-preview" alt="Screenshot preview" />
+          </div>
+          <div>
+            <label for="revisionNotes">ملاحظات التعديل المطلوبة</label>
+            <textarea id="revisionNotes" placeholder="مثال: كبّر حجم العنوان في السكشن التاني، أو غيّر ترتيب البطاقات في قسم الكاميرا، أو عدّل الترجمة العربية في البانر..."></textarea>
+          </div>
+        </div>
+        <div style="margin-top: 14px;">
+          <button type="button" class="btn" id="reviseBtn" onclick="applyRevision()">✨ تطبيق التعديل على الملفين</button>
+        </div>
+        <div id="revisionStatus" class="status"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let generatedEn = '';
+    let generatedAr = '';
+    let screenshotBase64 = null;
+    let screenshotMime = null;
+
+    // Load saved API key
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('gemini_api_key');
+      if (saved) document.getElementById('apiKey').value = saved;
+    });
+
+    function saveKey() {
+      const key = document.getElementById('apiKey').value.trim();
+      if (!key) return showStatus('mainStatus', 'برجاء إدخال مفتاح API صحيح.', 'error');
+      localStorage.setItem('gemini_api_key', key);
+      showStatus('mainStatus', 'تم حفظ مفتاح API في متصفحك بنجاح.', 'success');
+    }
+
+    function showStatus(elId, msg, type) {
+      const el = document.getElementById(elId);
+      el.className = 'status ' + type;
+      el.textContent = msg;
+    }
+
+    async function fetchPageContent(urlInputId, targetTextareaId) {
+      const url = document.getElementById(urlInputId).value.trim();
+      if (!url) return showStatus('mainStatus', 'أدخل الرابط أولاً قبل السحب.', 'error');
+      showStatus('mainStatus', 'جاري محاولة سحب محتوى الصفحة وروابط الصور...', 'info');
+
+      try {
+        // Using Jina Reader public proxy to extract clean markdown + image URLs from JS-rendered pages
+        const proxyUrl = 'https://r.jina.ai/' + url;
+        const res = await fetch(proxyUrl);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        document.getElementById(targetTextareaId).value = text.slice(0, 28000);
+        showStatus('mainStatus', 'تم سحب بيانات الصفحة بنجاح! راجعها في الخانة بالأسفل.', 'success');
+      } catch (err) {
+        showStatus('mainStatus', 'تعذر السحب التلقائي من هذا الموقع بسبب قيود الحماية. انسخ محتوى الصفحة وروابط الصور يدوياً في الخانة بالأسفل.', 'error');
+      }
+    }
+
+    function previewScreenshot(event) {
+      const file = event.target.files[0];
+      const img = document.getElementById('screenshotPreview');
+      if (!file) {
+        screenshotBase64 = null;
+        img.style.display = 'none';
+        return;
+      }
+      screenshotMime = file.type;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        img.src = dataUrl;
+        img.style.display = 'block';
+        screenshotBase64 = dataUrl.split(',')[1];
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function buildSystemPrompt() {
+      return `You are a senior Amazon A+ content designer, ecommerce creative director, and front-end developer.
+
+### CORE DESIGN & VISUAL DIRECTION
+Use the Raya Shop product page visual language as the primary reference:
+- Maintain a unified, polished visual design across EVERY section. Do NOT give any section (such as Display) a contrasting dark background that breaks visual consistency.
+- Page and section background: #eef3ff (pale blue).
+- Image panels, cards, and content containers: #ffffff (white).
+- Primary text: #111827 | Muted body/caption text: #5f6b7a.
+- Primary brand accent: #1d4ed8 | Darker accent: #1237a4.
+- Borders: #dfe7f3 and #e5eaf2.
+- Typography: Arial, Helvetica, sans-serif for English; Arial, Tahoma, sans-serif for Arabic.
+- Use clean rounded panels (border-radius in inline CSS), generous spacing, clear visual hierarchy, benefit-led headings, and white rounded image panels with natural proportions (height:auto).
+
+### FLEXIBLE PAGE STRUCTURE
+- Hero MUST always be the first section (product name, concise benefit-led intro, up to 4 verified feature badges, prominent product image with short caption).
+- Follow Hero with sections strictly tailored to VERIFIED product facts (Durability/protection, Battery & charging, Display, Camera, Performance/storage/connectivity, Lifestyle if supported, Specifications table, Closing benefit section). Do not invent specs or add filler sections.
+
+### STRICT HTML & INLINE CSS RULES
+1. Use ONLY HTML <table>, <thead>, <tbody>, <tr>, <td> for all layout structure.
+2. Put ALL styling inside inline style="..." attributes.
+3. NEVER use <style> blocks, external CSS files, CSS classes for layout/styling, <script> tags, CSS Grid, or Flexbox.
+4. Use role="presentation" and border="0" cellpadding="0" cellspacing="0" on layout tables.
+5. Complete valid HTML5 documents with <meta charset="UTF-8"> and <meta name="viewport" content="width=device-width, initial-scale=1.0">.
+6. English document: <html lang="en" dir="ltr">.
+7. Arabic document: <html lang="ar" dir="rtl"> with dir="rtl" on Arabic layout tables, right-aligned Arabic text, and dir="ltr" wrapped around model numbers, units, measurements, and technical abbreviations.
+8. Center main content tables at width="1200" with inline style="width:100%;max-width:1200px;margin:0 auto;".
+9. Fluid images: style="display:block;width:100%;max-width:<px>;height:auto;border:0;" with descriptive alt text.
+
+### ACCURACY & LOCALIZATION
+- Never fabricate specifications, claims, or image URLs. Use only verified facts and direct image URLs provided in the source. If an image is missing, clearly note it in the summary.
+- Arabic copy must be high-converting, natural e-commerce Arabic (NOT literal robotic translation).
+
+### STRICT RESPONSE FORMAT
+Return your response using these exact delimiters so the application can parse them cleanly:
+
+===SUMMARY_START===
+(Write a concise summary in Arabic & English covering: verified product findings, chosen sections, any missing/unverified specs or images, and the Amazon/Magento HTML sanitization caveat.)
+===SUMMARY_END===
+
+===HTML_EN_START===
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+...full standalone English HTML...
+</html>
+===HTML_EN_END===
+
+===HTML_AR_START===
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+...full standalone Arabic HTML...
+</html>
+===HTML_AR_END===`;
+    }
+
+    async function callGemini(parts) {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      const model = document.getElementById('modelSelect').value;
+      if (!apiKey) throw new Error('برجاء إدخال وحفظ Gemini API Key أولاً.');
+
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const body = {
+        systemInstruction: { parts: [{ text: buildSystemPrompt() }] },
+        contents: [{ role: 'user', parts }],
+        generationConfig: {
+          temperature: 0.35,
+          maxOutputTokens: 65536
+        }
+      };
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error?.message || 'حدث خطأ أثناء الاتصال بـ Gemini API');
+      }
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    }
+
+    function parseResponse(rawText) {
+      const summaryMatch = rawText.match(/===SUMMARY_START===([\s\S]*?)===SUMMARY_END===/);
+      const enMatch = rawText.match(/===HTML_EN_START===([\s\S]*?)===HTML_EN_END===/);
+      const arMatch = rawText.match(/===HTML_AR_START===([\s\S]*?)===HTML_AR_END===/);
+
+      const cleanCode = (str) => str.replace(/^```html\s*/i, '').replace(/```\s*$/i, '').trim();
+
+      return {
+        summary: summaryMatch ? summaryMatch[1].trim() : 'تم توليد الكود بنجاح.',
+        en: enMatch ? cleanCode(enMatch[1]) : '',
+        ar: arMatch ? cleanCode(arMatch[1]) : ''
+      };
+    }
+
+    function renderOutputs(summary, enHtml, arHtml) {
+      generatedEn = enHtml;
+      generatedAr = arHtml;
+
+      document.getElementById('summaryCard').style.display = 'block';
+      document.getElementById('outputCard').style.display = 'block';
+      document.getElementById('revisionCard').style.display = 'block';
+
+      document.getElementById('aiSummary').textContent = summary;
+      document.getElementById('codeBoxEn').textContent = enHtml;
+      document.getElementById('codeBoxAr').textContent = arHtml;
+
+      document.getElementById('frameEn').srcdoc = enHtml;
+      document.getElementById('frameAr').srcdoc = arHtml;
+    }
+
+    async function generateAPlus() {
+      const btn = document.getElementById('generateBtn');
+      const productUrl = document.getElementById('productUrl').value.trim();
+      const productData = document.getElementById('productRawData').value.trim();
+      const refUrl = document.getElementById('refUrl').value.trim();
+      const refData = document.getElementById('refRawData').value.trim();
+      const customPrompt = document.getElementById('customPrompt').value.trim();
+
+      if (!productUrl && !productData) {
+        return showStatus('mainStatus', 'برجاء إدخال رابط المنتج أو لصق مواصفاته وروابط صوره.', 'error');
+      }
+
+      btn.disabled = true;
+      showStatus('mainStatus', 'جاري تحليل المنتج وتصميم ملفي A+ (EN + AR)... قد يستغرق ذلك 20-45 ثانية.', 'info');
+
+      try {
+        const userPrompt = `
+PRODUCT SOURCE URL: ${productUrl || 'Not provided'}
+EXTRACTED / PROVIDED PRODUCT DATA & IMAGE URLS:
+${productData || 'No raw text pasted; rely strictly on verified info if accessible, otherwise list what is missing.'}
+
+DESIGN REFERENCE URL: ${refUrl}
+REFERENCE NOTES / EXTRACTED STRUCTURE:
+${refData || 'Follow the Raya Shop visual system (#eef3ff page bg, #ffffff white cards, #1d4ed8 brand blue, #111827 text, #5f6b7a muted text, clean rounded panels).'}
+
+CUSTOM USER INSTRUCTIONS:
+${customPrompt || 'None'}
+
+Generate both standalone HTML files now following all strict rules and output delimiters.
+        `.trim();
+
+        const raw = await callGemini([{ text: userPrompt }]);
+        const parsed = parseResponse(raw);
+
+        if (!parsed.en || !parsed.ar) {
+          throw new Error('لم يلتزم النموذج بتنسيق الإخراج الكامل. حاول مرة أخرى أو استخدم نموذج gemini-2.5-pro.');
+        }
+
+        renderOutputs(parsed.summary, parsed.en, parsed.ar);
+        showStatus('mainStatus', 'تم توليد الملفين بنجاح! يمكنك معاينتهما وتحميلهما بالأسفل.', 'success');
+      } catch (err) {
+        showStatus('mainStatus', err.message, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function applyRevision() {
+      const btn = document.getElementById('reviseBtn');
+      const notes = document.getElementById('revisionNotes').value.trim();
+
+      if (!generatedEn || !generatedAr) {
+        return showStatus('revisionStatus', 'يجب توليد التصميم الأساسي أولاً قبل طلب تعديلات.', 'error');
+      }
+      if (!notes && !screenshotBase64) {
+        return showStatus('revisionStatus', 'ارفع صورة Screenshot أو اكتب ملاحظات التعديل أولاً.', 'error');
+      }
+
+      btn.disabled = true;
+      showStatus('revisionStatus', 'جاري تحليل التعديل وتحديث نسختي EN و AR...', 'info');
+
+      try {
+        const parts = [
+          {
+            text: `Apply the requested visual/structural/copy edits to BOTH the English and Arabic A+ HTML files below.
+Keep all Table + Inline CSS rules, color palette (#eef3ff, #ffffff, #1d4ed8), and RTL rules strictly intact.
+
+USER REVISION NOTES:
+${notes || 'Inspect the attached screenshot and refine the layout/spacing/hierarchy shown.'}
+
+CURRENT ENGLISH HTML:
+${generatedEn}
+
+CURRENT ARABIC HTML:
+${generatedAr}
+
+Return the updated summary and complete updated HTML files using the exact ===SUMMARY_START===, ===HTML_EN_START===, and ===HTML_AR_START=== delimiters.`
+          }
+        ];
+
+        if (screenshotBase64 && screenshotMime) {
+          parts.push({
+            inlineData: {
+              mimeType: screenshotMime,
+              data: screenshotBase64
+            }
+          });
+        }
+
+        const raw = await callGemini(parts);
+        const parsed = parseResponse(raw);
+
+        if (!parsed.en || !parsed.ar) {
+          throw new Error('تعذر استخراج الكود المحدّث. حاول توضيح التعديل وإعادة المحاولة.');
+        }
+
+        renderOutputs(parsed.summary, parsed.en, parsed.ar);
+        showStatus('revisionStatus', 'تم تطبيق التعديل على النسختين بنجاح!', 'success');
+      } catch (err) {
+        showStatus('revisionStatus', err.message, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function switchTab(tabName, btnEl) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tabName).style.display = 'block';
+      btnEl.classList.add('active');
+    }
+
+    function getSlug() {
+      const raw = document.getElementById('productSlug').value.trim().toLowerCase();
+      return raw ? raw.replace(/[^a-z0-9-_]+/g, '-').replace(/^-+|-+$/g, '') : 'product';
+    }
+
+    function downloadFile(lang) {
+      const content = lang === 'en' ? generatedEn : generatedAr;
+      if (!content) return;
+      const slug = getSlug();
+      const filename = lang === 'en'
+        ? `${slug}_a_plus_table_inline.html`
+        : `${slug}_a_plus_table_inline_ar.html`;
+
+      const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function copyCode(lang) {
+      const content = lang === 'en' ? generatedEn : generatedAr;
+      if (!content) return;
+      navigator.clipboard.writeText(content).then(() => {
+        showStatus('mainStatus', `تم نسخ كود ${lang.toUpperCase()} إلى الحافظة!`, 'success');
+      });
+    }
+  </script>
+</body>
+</html>
